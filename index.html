@@ -33,7 +33,10 @@
     .buttons {
       margin-top: 30px;
       position: relative;
-      height: 70px;
+      width: 320px;
+      height: 80px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     button {
@@ -42,7 +45,7 @@
       border-radius: 30px;
       border: none;
       cursor: pointer;
-      transition: transform 0.25s ease;
+      transition: transform 0.25s ease, left 0.2s ease, top 0.2s ease;
       position: absolute;
     }
 
@@ -50,12 +53,14 @@
       background: #ff4d6d;
       color: white;
       left: 0;
+      top: 0;
     }
 
     #no {
       background: white;
       color: #ff4d6d;
-      left: 150px;
+      left: 180px;
+      top: 0;
     }
 
     .icons {
@@ -93,8 +98,17 @@
     let yesScale = 1;
     let confettiInterval;
 
-    // No button shrinks, Yes button grows (no running away)
-    function shrinkNoGrowYes() {
+    // Move No button slightly when you get close
+    function dodgeNoButton() {
+      const maxX = 240;
+      const maxY = 40;
+
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+
       noScale = Math.max(0.3, noScale - 0.1);
       yesScale += 0.12;
 
@@ -102,8 +116,25 @@
       yesBtn.style.transform = `scale(${yesScale})`;
     }
 
-    noBtn.addEventListener("mouseenter", shrinkNoGrowYes);
-    noBtn.addEventListener("click", shrinkNoGrowYes);
+    noBtn.addEventListener("mouseenter", dodgeNoButton);
+    noBtn.addEventListener("click", dodgeNoButton);
+
+    // Fade-in audio
+    function fadeInAudio() {
+      song.volume = 0;
+      song.play();
+
+      let volume = 0;
+      const fade = setInterval(() => {
+        volume += 0.05;
+        if (volume >= 0.8) {
+          song.volume = 0.8;
+          clearInterval(fade);
+        } else {
+          song.volume = volume;
+        }
+      }, 200);
+    }
 
     // Yes button click
     yesBtn.addEventListener("click", () => {
@@ -115,7 +146,7 @@
         </div>
       `;
 
-      // Big confetti explosion
+      // Big confetti burst
       confetti({
         particleCount: 300,
         spread: 140,
@@ -131,9 +162,7 @@
         });
       }, 200);
 
-      // Play music
-      song.volume = 0.8;
-      song.play();
+      fadeInAudio();
     });
   </script>
 
