@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valentine 💖</title>
+
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #ffd1dc;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    h1 {
+      color: #d63384;
+      font-size: 2.2rem;
+      margin: 10px 0;
+    }
+
+    .buttons {
+      margin-top: 30px;
+      position: relative;
+      height: 70px;
+    }
+
+    button {
+      font-size: 1.2rem;
+      padding: 12px 28px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.25s ease;
+      position: absolute;
+    }
+
+    #yes {
+      background: #ff4d6d;
+      color: white;
+      left: 0;
+    }
+
+    #no {
+      background: white;
+      color: #ff4d6d;
+      left: 150px;
+    }
+
+    .icons {
+      margin-top: 30px;
+    }
+
+    .icons img {
+      height: 60px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="content">
+    <h1>My Kezhanuo 💕</h1>
+    <h1>My penguin 🐧<br>Will you be my Valentine?</h1>
+
+    <div class="buttons">
+      <button id="yes">Yes 💖</button>
+      <button id="no">No 🙈</button>
+    </div>
+  </div>
+
+  <!-- Hosted audio -->
+  <audio id="song" src="iloveyouso.mp3" preload="auto"></audio>
+
+  <script>
+    const yesBtn = document.getElementById("yes");
+    const noBtn = document.getElementById("no");
+    const content = document.getElementById("content");
+    const song = document.getElementById("song");
+
+    let noScale = 1;
+    let yesScale = 1;
+    let confettiInterval;
+
+    // No button shrinks, Yes button grows (no running away)
+    function shrinkNoGrowYes() {
+      noScale = Math.max(0.3, noScale - 0.1);
+      yesScale += 0.12;
+
+      noBtn.style.transform = `scale(${noScale})`;
+      yesBtn.style.transform = `scale(${yesScale})`;
+    }
+
+    noBtn.addEventListener("mouseenter", shrinkNoGrowYes);
+    noBtn.addEventListener("click", shrinkNoGrowYes);
+
+    // Yes button click
+    yesBtn.addEventListener("click", () => {
+      content.innerHTML = `
+        <h1>Thank you for saying yes 💖</h1>
+        <div class="icons">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Coca-Cola_logo.svg" alt="Coca-Cola">
+          <img src="https://cdn-icons-png.flaticon.com/512/9296/9296564.png" alt="Penguin">
+        </div>
+      `;
+
+      // Big confetti explosion
+      confetti({
+        particleCount: 300,
+        spread: 140,
+        origin: { y: 0.6 }
+      });
+
+      // Continuous falling confetti
+      confettiInterval = setInterval(() => {
+        confetti({
+          particleCount: 6,
+          spread: 80,
+          origin: { x: Math.random(), y: 0 }
+        });
+      }, 200);
+
+      // Play music
+      song.volume = 0.8;
+      song.play();
+    });
+  </script>
+
+</body>
+</html>
